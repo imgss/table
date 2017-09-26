@@ -75,5 +75,19 @@
                 $(toActiveCell).trigger('click');
             }
         });
+        $(window).on('resize',function(){
+            var cell = data.activeCell,
+                position = cell.getBoundingClientRect(),
+                left = cell.offsetLeft,
+                top = cell.offsetTop;
+            input.css({
+                display:'inline-block',
+                top:top+'px',
+                left:left+'px',
+                width:position.width+'px',
+                height:position.height+'px'
+            })[0].focus();
+
+        });
     };
 })(jQuery);
