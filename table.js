@@ -28,10 +28,17 @@
         }
 
     }
-    $.fn.table = function(){
+    $.fn.table = function(options){
+        options = $.extend(options, {
+            inputCss: {padding: '0.75em'}
+        });
         var wrapper = this.wrap('<div id="table-editable"></div>').parent();
-        wrapper.append('<input type="text" style="display:none;position:absolute">');
+        wrapper.append('<input \
+                    type="text" \
+                    style="box-sizing: border-box;display:none;position:absolute; \
+                    ">');
         var input = wrapper.find('input');
+        input.css(options.inputCss);
         wrapper.on('click', 'td', function(event){
             var cell = event.target;
             if(data.activeCell){//在移动input之前更新cell的值为input的值
