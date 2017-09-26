@@ -2,6 +2,32 @@
     var data = {
         activeCell:null
     };
+    function findCell(cell, direction){
+        var indexof = [].indexOf, 
+            line = $(cell).parent()[0],
+            index = indexof.call(line.children, cell);
+        switch (direction){
+        case 'DOWN':
+            var nextLine = line.nextElementSibling;
+            if(nextLine){
+                return $(nextLine).children()[index];
+            }else{
+                return null;
+            }
+        case 'UP':
+            var prevLine = line.previousElementSibling;
+            if(prevLine){
+                return $(prevLine).children()[index];
+            }else{
+                return null;
+            }
+        case 'LEFT':
+            return cell.previousElementSibling;
+        case 'RIGHT':
+            return cell.nextElementSibling;
+        }
+
+    }
     $.fn.table = function(){
         var wrapper = this.wrap('<div id="table-editable"></div>').parent();
         wrapper.append('<input type="text" style="display:none;position:absolute">');
@@ -28,6 +54,26 @@
                 width:position.width+'px',
                 height:position.height+'px'
             })[0].focus();
+        });
+        $(document).on('keydown', function(event){
+            var toActiveCell;
+            switch (event.keyCode){
+            case 38:
+                toActiveCell = findCell(data.activeCell, 'UP');
+                break;
+            case 37:
+                toActiveCell = findCell(data.activeCell, 'LEFT');
+                break;
+            case 40:
+                toActiveCell = findCell(data.activeCell, 'DOWN');
+                break;
+            case 39:
+                toActiveCell = findCell(data.activeCell, 'RIGHT');
+                break;
+            }
+            if(toActiveCell){
+                $(toActiveCell).trigger('click');
+            }
         });
     };
 })(jQuery);
