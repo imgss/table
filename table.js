@@ -2,16 +2,13 @@
     var data = {
         activeCell: null,
         selects: {},
-        selectCols: []
+        selectCols: [],
+        isSelector: false,
+        defalutInput: null
     };
     $.fn.table = function(options){
-        options = $.extend(options, {
-            inputCss: {padding: '0.75em'},
-            cellType: 'td',
-            select:{
-                3:['A','B','c','D']
-            }
-        });
+        var defalutOptions = {};
+        options = $.extend(defalutOptions, options);
         var wrapper = this.wrap('<div id="table-editable"></div>').parent();
         wrapper.append('<input \
                     type="text" \
@@ -27,7 +24,9 @@
             }
         }
         var input = wrapper.find('input');
+        data.defalutInput = input[0];
         input.css(options.inputCss);
+        //监听单元格点击事件
         wrapper.on('click', 'td', function(event){
             var cell = event.target;
             var index = getIndexOf(cell);
@@ -41,9 +40,19 @@
             var top = cell.offsetTop;
             var value = cell.innerHTML;
             if(data.selectCols.indexOf(String(index)) !== -1){
-                input.hide();
-                input = $(data.selects[index]);
-                input.show();
+                if(!data.isSelector){
+                    input.hide();
+                    input = $(data.selects[index]);
+                    data.isSelector = true;
+                    input.show();
+                }
+            }else{
+                if(data.isSelector){
+                    input.hide();
+                    input = $(data.defalutInput);
+                    data.isSelector = false;
+                    input.show();
+                }
             }
             if(value){//将值填写到input中
                 
@@ -57,6 +66,7 @@
                 height:position.height+'px'
             })[0].focus();
         });
+        //监听键盘事件
         $(document).on('keydown', function(event){
             var toActiveCell;
             switch (event.keyCode){
@@ -77,7 +87,10 @@
                 $(toActiveCell).trigger('click');
             }
         });
-        $(window).on('resize',function(){
+        $(window).on('resize', function(){
+            if(!data.activeCell){
+                return;
+            }
             var cell = data.activeCell,
                 position = cell.getBoundingClientRect(),
                 left = cell.offsetLeft,
@@ -89,13 +102,12 @@
                 width:position.width+'px',
                 height:position.height+'px'
             })[0].focus();
-
         });
     };
+    //找出当前单元格的下一个单元格
     function findCell(cell, direction){
-        var indexof = [].indexOf, 
-            line = $(cell).parent()[0],
-            index = indexof.call(line.children, cell);
+        var line = cell.parentElement,
+            index = [].indexOf.call(line.children, cell);
         switch (direction){
         case 'DOWN':
             var nextLine = line.nextElementSibling;
@@ -118,6 +130,7 @@
         }
 
     }
+    //创建选择框
     function createSelect(options){
         if (Object.prototype.toString.call(options) !== '[object Array]'){
             throw new Error('选项应该是数组');
@@ -129,7 +142,8 @@
         htmlStr += '</select>';
         return $(htmlStr)[0];
     }
+    //获取单元格的index;
     function getIndexOf(cell){
-        return $(cell).parent().children().index(cell);
+        return [].indexOf.call(cell.parentElement.children, cell);
     }
 })(jQuery);
