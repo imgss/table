@@ -7,7 +7,7 @@
 ```
     $('table').table({
             inputCss: {padding: '0.75em'},//给输入框添加的样式
-            cellType: 'td',//单元格是 td 还是 div
+            cellType: 'td',//一个选择器字符串，选出单元格是 td 还是 div,默认是td
             select:{
                 3:['A','B','C','D']//第三列是一个选择框，选项是a,b,c,d
             }

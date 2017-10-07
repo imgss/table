@@ -51,13 +51,13 @@
                 <h4 class="header">体育</h4>
             </div>
             <div>
-                <div>小明</div>
+                <div>小李</div>
                 <div>96</div>
                 <div>83</div>
                 <div>A</div>
             </div>
             <div>
-                <div>小华</div>
+                <div>小王</div>
                 <div>86</div>
                 <div>76</div>
                 <div>C</div>
@@ -76,7 +76,10 @@
                 select:{
                     3:['A','B','C','D','E']
                 }
-            })
+            }).on('activeChange', function(event,data){
+                console.log(data)
+            });
+            
         </script>
     </body>
 </html>
