@@ -7,9 +7,11 @@
         defalutInput: null
     };
     $.fn.table = function(options){
-        var defalutOptions = {};
+        var defalutOptions = {
+            cellType:'td'
+        };
         options = $.extend(defalutOptions, options);
-        var wrapper = this.wrap('<div id="table-editable"></div>').parent();
+        var wrapper = this.wrap('<div></div>').parent();
         wrapper.append('<input \
                     type="text" \
                     style="box-sizing: border-box;display:none;position:absolute; \
@@ -27,8 +29,11 @@
         data.defalutInput = input[0];
         input.css(options.inputCss);
         //监听单元格点击事件
-        wrapper.on('click', 'td', function(event){
+        wrapper.on('click', options.cellType, function(event){
             var cell = event.target;
+            // event.stopPropagation();
+            console.log(options.cellType);
+            console.log(event.target)
             var index = getIndexOf(cell);
             if(data.activeCell){//在移动input之前更新cell的值为input的值
                 var inputValue = input.val();
